@@ -51,6 +51,9 @@ jobs:
       - name: Run tests
         run: dotnet test --no-restore --verbosity normal
         working-directory: src/Pipeline
+      
+      - name: Intentional Failure
+        run: exit 1  # This command will fail and trigger the notify job
 
       - name: Code Coverage
         run: dotnet test --no-restore --collect:"XPlat Code Coverage"
