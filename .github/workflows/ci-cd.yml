@@ -77,9 +77,11 @@ jobs:
     needs: [build, test, deploy]
     if: failure()  # Notify only if previous jobs failed
     steps:
-      - name: Create a GitHub Issue on Failure
-        uses: JasonEtco/create-an-issue@v2
-        with:
-          title: "CI/CD Pipeline Failed"
-          body: "The pipeline failed during the `{{ job.name }}` step. Please check the logs for more details."
-          labels: "bug, CI/CD"
+      - name: Create GitHub Issue on Failure
+        run: |
+          curl -X POST \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          -H "Content-Type: application/json" \
+          -d '{"title":"CI/CD Pipeline Failed","body":"The pipeline failed during one of the following jobs: build, test, or deploy. Please check the logs for more details.","labels":["bug","CI/CD"]}' \
+          https://api.github.com/repos/${{ github.repository }}/issues
