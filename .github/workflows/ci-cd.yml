@@ -74,8 +74,14 @@ jobs:
     needs: [build, test, deploy]
     if: failure()  # Notify only if previous jobs failed
     steps:
-      - name: Send notification to Slack
-        uses: slackapi/slack-github-action@v1.0.0
+      - name: Send notification email
+        uses: marketplace-actions/email@v1
         with:
-          slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
-          text: 'Build or deployment failed! Please check the GitHub Actions for more details.'
+          to: ${{ secrets.EMAIL_TO }}
+          from: ${{ secrets.EMAIL_FROM }}
+          subject: 'Build or Deployment Failed'
+          body: 'Build or deployment failed! Please check the GitHub Actions for more details.'
+          smtp-server: ${{ secrets.SMTP_SERVER }}
+          smtp-port: ${{ secrets.SMTP_PORT }}
+          smtp-user: ${{ secrets.SMTP_USER }}
+          smtp-password: ${{ secrets.SMTP_PASSWORD }}
