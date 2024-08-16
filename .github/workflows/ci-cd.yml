@@ -39,21 +39,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up .NET
+      - name: Set up .NET #Commands used to setup the .net file
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '8.x'
 
-      - name: Restore dependencies
+      - name: Restore dependencies #Code used to restore the Dependencies
         run: dotnet restore
         working-directory: src/Pipeline
 
-      - name: Run tests
+      - name: Run tests #This is the code used to run the tests
         run: dotnet test --no-restore --verbosity normal
         working-directory: src/Pipeline
-      
-      - name: Intentional Failure
-        run: exit 1  # This command will fail and trigger the notify job
 
       - name: Code Coverage
         run: dotnet test --no-restore --collect:"XPlat Code Coverage"
@@ -68,11 +65,11 @@ jobs:
 
       - name: Deploy to Staging
         run: |
-          # Add your deployment script here
+          # This is where the code for Deploying step goes to
           echo "Deploying to staging environment..."
         working-directory: src/Pipeline
 
-  notify:
+  notify: #Code used to send notifications
     runs-on: ubuntu-latest
     needs: [build, test, deploy]
     if: failure()  # Notify only if previous jobs failed
