@@ -77,14 +77,9 @@ jobs:
     needs: [build, test, deploy]
     if: failure()  # Notify only if previous jobs failed
     steps:
-      - name: Send notification email
-        uses: dawidd6/action-send-mail@v3
+      - name: Create a GitHub Issue on Failure
+        uses: JasonEtco/create-an-issue@v2
         with:
-          server_address: smtp.gmail.com
-          server_port: 587
-          username: ${{ secrets.SMTP_USER }}
-          password: ${{ secrets.SMTP_PASSWORD }}
-          subject: "Build or Deployment Failed"
-          body: "Build or deployment failed! Please check the GitHub Actions for more details."
-          to: ${{ secrets.EMAIL_TO }}
-          from: ${{ secrets.EMAIL_FROM }}
+          title: "CI/CD Pipeline Failed"
+          body: "The pipeline failed during the `{{ job.name }}` step. Please check the logs for more details."
+          labels: "bug, CI/CD"
